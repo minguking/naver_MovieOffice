@@ -12,6 +12,9 @@ class CommentViewController: UIViewController {
     
     // MARK: - Properties
     
+    let postModel = [PostModel]()
+    let networkURL = NetworkURL()
+    
     lazy var leftButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(handleCanel))
     lazy var rightButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(handleDone))
     
@@ -23,6 +26,13 @@ class CommentViewController: UIViewController {
         img.contentMode = .scaleAspectFit
         return img
     }()
+    let starImage: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "ic_star_large_full")
+        img.contentMode = .scaleAspectFit
+        return img
+    }()
+    
     
     let nickNameTf = UITextField()
     let contentTv = UITextView()
@@ -52,6 +62,85 @@ class CommentViewController: UIViewController {
     
     @objc func handleDone() {
         
+        guard let url = URL(string: "https://connect-boxoffice.run.goorm.io/comment") else { return }
+        
+        //
+        let param = "rating=4.0&writer=abcd&movie_id=5a54c286e8a71d136fb5378e&contents=abcd"
+
+        let paramData = param.data(using: .utf8)
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = paramData
+
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.setValue(String(paramData!.count), forHTTPHeaderField: "Content-Length")
+        //
+        
+        let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let err = error {
+                print("God damn error!!! \(err.localizedDescription)")
+                return
+            }
+            guard let data = data else { return }
+            
+            let output = String(data: data, encoding: .utf8)
+            print("result : \(output!)")
+            
+        }
+        dataTask.resume()
+
+//        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+//
+//            if let err = error {
+//                print(err.localizedDescription)
+//                return
+//            }
+//            DispatchQueue.main.async {
+//                do {
+//                    let realData = try JSONEncoder().encode(data)
+//                } catch(let err) {
+//                    print(err.localizedDescription)
+//                }
+//                let output = String(data: data!, encoding: .utf8)
+//                print("result : \(output!)")
+//            }
+//        }
+//        task.resume()
+        
+//        let url = URL(string: "https://connect-boxoffice.run.goorm.io/comment")!
+//        var request = URLRequest(url: url)
+//        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+//        request.httpMethod = "POST"
+//        let parameters: [String: Any] = [
+//            "rating": 4.0,
+//            "writer": "asdfghjk",
+//            "movie_id": "5a54c286e8a71d136fb5378e",
+//            "contents": "Jack"
+//        ]
+//        request.httpBody = parameters.percentEncoded()
+//
+//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+//            guard let data = data,
+//                let response = response as? HTTPURLResponse,
+//                error == nil else {
+//                    // check for fundamental networking error
+//                print("error", error ?? "Unknown error")
+//                return
+//            }
+//
+//            guard (200 ... 299) ~= response.statusCode else {
+//                // check for http errors
+//                print("statusCode should be 2xx, but is \(response.statusCode)")
+//                print("response = \(response)")
+//                return
+//            }
+//
+//            let responseString = String(data: data, encoding: .utf8)
+//            print("responseString = \(responseString)")
+//        }
+//
+//        task.resume()
     }
     
     
@@ -66,11 +155,13 @@ class CommentViewController: UIViewController {
         view.addSubview(topView)
         view.addSubview(bottomView)
         topView.addSubview(titleLabel)
+        topView.addSubview(starImage)
         view.addSubview(ageImage)
         bottomView.addSubview(nickNameTf)
         bottomView.addSubview(contentTv)
         
         topView.translatesAutoresizingMaskIntoConstraints = false
+        starImage.translatesAutoresizingMaskIntoConstraints = false
         bottomView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         ageImage.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +170,7 @@ class CommentViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             
-            topView.topAnchor.constraint(equalTo: view.topAnchor),
+            topView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             topView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             // topView height를 가로모드를 고려해서 view height의 0.3배로 정함
@@ -104,7 +195,10 @@ class CommentViewController: UIViewController {
             contentTv.topAnchor.constraint(equalTo: nickNameTf.bottomAnchor, constant: 12),
             contentTv.leadingAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.leadingAnchor, constant: 12),
             contentTv.bottomAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.bottomAnchor, constant: -12),
-            contentTv.trailingAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.trailingAnchor, constant: -12)
+            contentTv.trailingAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.trailingAnchor, constant: -12),
+            
+            starImage.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
+            starImage.centerXAnchor.constraint(equalTo: topView.centerXAnchor)
             
             
         ])
@@ -118,8 +212,7 @@ class CommentViewController: UIViewController {
         
         nickNameTf.borderStyle = .roundedRect
         nickNameTf.placeholder = "닉네임을 입력하세요"
-        
-        
+        nickNameTf.text = SharedInfo.shared.nickName ?? nil
         
         contentTv.layer.borderWidth = 1
         contentTv.layer.borderColor = UIColor.systemPink.cgColor
@@ -162,3 +255,26 @@ extension CommentViewController: UITextViewDelegate {
  post
  별 드래그해서 점수 올리기 만들어야함.
  */
+
+extension Dictionary {
+    func percentEncoded() -> Data? {
+        return map { key, value in
+            let escapedKey = "\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            let escapedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            return escapedKey + "=" + escapedValue
+        }
+        .joined(separator: "&")
+        .data(using: .utf8)
+    }
+}
+
+extension CharacterSet {
+    static let urlQueryValueAllowed: CharacterSet = {
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+        return allowed
+    }()
+}

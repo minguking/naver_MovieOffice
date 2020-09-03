@@ -51,7 +51,7 @@ class SecondViewController: UIViewController {
         
         configureUI()
         
-        requestMovie(first: SharedInfo.shared.type, second: "\(SharedInfo.shared.orderType)")
+        requestMovie(first: networkURL.type, second: "\(SharedInfo.shared.orderType)")
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNoti(_:)), name: DidReceiveNotification, object: nil)
     }

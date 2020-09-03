@@ -29,6 +29,9 @@
 		3D3FFAB724FE309B00E6BE0B /* CommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3FFAB624FE309B00E6BE0B /* CommentTableViewCell.swift */; };
 		3D3FFABA24FE46C500E6BE0B /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3FFAB924FE46C500E6BE0B /* CommentModel.swift */; };
 		3D58A7DB24FE7841003F17E2 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58A7DA24FE7841003F17E2 /* ImageViewController.swift */; };
+		3D58A7DD24FF72B5003F17E2 /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58A7DC24FF72B5003F17E2 /* PostModel.swift */; };
+		3D58A7DF2500CBE3003F17E2 /* StarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58A7DE2500CBE3003F17E2 /* StarCollectionViewCell.swift */; };
+		3D58A7E12500DD31003F17E2 /* RateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58A7E02500DD31003F17E2 /* RateCollectionViewCell.swift */; };
 		3DD3FA8A24FE6F4900092441 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3FA8924FE6F4900092441 /* CommentViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +60,9 @@
 		3D3FFAB624FE309B00E6BE0B /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
 		3D3FFAB924FE46C500E6BE0B /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		3D58A7DA24FE7841003F17E2 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		3D58A7DC24FF72B5003F17E2 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
+		3D58A7DE2500CBE3003F17E2 /* StarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarCollectionViewCell.swift; sourceTree = "<group>"; };
+		3D58A7E02500DD31003F17E2 /* RateCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCollectionViewCell.swift; sourceTree = "<group>"; };
 		3DD3FA8924FE6F4900092441 /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,6 +114,7 @@
 				3D3FFA9C24FBA42600E6BE0B /* MovieModel.swift */,
 				3D3FFAAC24FD066C00E6BE0B /* MovieInfoModel.swift */,
 				3D3FFAB924FE46C500E6BE0B /* CommentModel.swift */,
+				3D58A7DC24FF72B5003F17E2 /* PostModel.swift */,
 				3D3FFA9A24FBA3B100E6BE0B /* NetworkURL.swift */,
 				3D3FFA9F24FBA5F500E6BE0B /* Request.swift */,
 				3D3FFAA224FC820300E6BE0B /* SharedInfo.swift */,
@@ -135,9 +142,11 @@
 			isa = PBXGroup;
 			children = (
 				3D3FFAAA24FCF23100E6BE0B /* DetailTableViewCell.swift */,
+				3D58A7DE2500CBE3003F17E2 /* StarCollectionViewCell.swift */,
 				3D3FFAB424FE291000E6BE0B /* SynopsisTableViewCell.swift */,
 				3D3FFAB224FE27A100E6BE0B /* StaffTableViewCell.swift */,
 				3D3FFAB624FE309B00E6BE0B /* CommentTableViewCell.swift */,
+				3D58A7E02500DD31003F17E2 /* RateCollectionViewCell.swift */,
 			);
 			path = MovieInfoCell;
 			sourceTree = "<group>";
@@ -223,13 +232,16 @@
 				3D3FFAB724FE309B00E6BE0B /* CommentTableViewCell.swift in Sources */,
 				3D3FFABA24FE46C500E6BE0B /* CommentModel.swift in Sources */,
 				3D3FFAA324FC820300E6BE0B /* SharedInfo.swift in Sources */,
+				3D58A7DD24FF72B5003F17E2 /* PostModel.swift in Sources */,
 				3D3FFA8124FB979C00E6BE0B /* FirstViewController.swift in Sources */,
 				3D3FFAA924FCEB1300E6BE0B /* MovieDetailViewController.swift in Sources */,
 				3D3FFA9524FB9FBF00E6BE0B /* SecondCollectionViewCell.swift in Sources */,
 				3D3FFA9324FB9CC300E6BE0B /* FirstTableViewCell.swift in Sources */,
 				3D3FFA7D24FB979C00E6BE0B /* AppDelegate.swift in Sources */,
 				3D3FFA9B24FBA3B100E6BE0B /* NetworkURL.swift in Sources */,
+				3D58A7E12500DD31003F17E2 /* RateCollectionViewCell.swift in Sources */,
 				3D3FFAA024FBA5F500E6BE0B /* Request.swift in Sources */,
+				3D58A7DF2500CBE3003F17E2 /* StarCollectionViewCell.swift in Sources */,
 				3D3FFAA724FCDA7700E6BE0B /* ShowAlert.swift in Sources */,
 				3D3FFA7F24FB979C00E6BE0B /* SceneDelegate.swift in Sources */,
 				3DD3FA8A24FE6F4900092441 /* CommentViewController.swift in Sources */,

@@ -8,6 +8,8 @@
 
 import UIKit
 
+private let rateCellId = "rate"
+
 class CommentTableViewCell: UITableViewCell {
     
     // MARK: - Properties
@@ -24,6 +26,11 @@ class CommentTableViewCell: UITableViewCell {
         label.numberOfLines = 0
         return label
     }()
+    
+    let layout = UICollectionViewFlowLayout()
+    
+    var point: Double = 0.0
+    
     
     // MARK: - init
     
@@ -42,6 +49,18 @@ class CommentTableViewCell: UITableViewCell {
     
     func configureUI() {
         
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(RateCollectionViewCell.self, forCellWithReuseIdentifier: rateCellId)
+        collectionView.backgroundColor = .clear
+        layout.scrollDirection = .horizontal
+        collectionView.isScrollEnabled = false
+        
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        addSubview(collectionView)
+        
         addSubview(idLabel)
         addSubview(userImage)
         addSubview(dateLabel)
@@ -51,6 +70,7 @@ class CommentTableViewCell: UITableViewCell {
         userImage.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             
@@ -61,6 +81,11 @@ class CommentTableViewCell: UITableViewCell {
             
             idLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             idLabel.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 4),
+            
+            collectionView.centerYAnchor.constraint(equalTo: idLabel.centerYAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: idLabel.trailingAnchor, constant: 4),
+            collectionView.widthAnchor.constraint(equalToConstant: 104),
+            collectionView.heightAnchor.constraint(equalToConstant: 30),
 
             dateLabel.topAnchor.constraint(equalTo: idLabel.bottomAnchor, constant: 4),
             dateLabel.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 4),
@@ -77,5 +102,58 @@ class CommentTableViewCell: UITableViewCell {
         dateLabel.textColor = .darkGray
         
     }
+    
+}
+
+
+extension CommentTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: rateCellId, for: indexPath) as! RateCollectionViewCell
+        
+//        let stringNum = SharedInfo.shared.point!
+        let num = Int(point)
+        
+        let halfNum: Double = Double(num) / 2
+        
+        if num % 2 == 0 {
+
+            if indexPath.row < Int(halfNum) {
+                cell.starImage.image = UIImage(named: "ic_star_full")
+            } else {
+                cell.starImage.image = UIImage(named: "ic_star_empty")
+            }
+
+        } else {
+            if indexPath.row < Int(halfNum) {
+                cell.starImage.image = UIImage(named: "ic_star_full")
+            } else if indexPath.row == Int(halfNum) {
+                cell.starImage.image = UIImage(named: "ic_star_half")
+            } else {
+                cell.starImage.image = UIImage(named: "ic_star_empty")
+            }
+        }
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 20, height: 20)
+    }
+    
+    
     
 }

@@ -165,7 +165,7 @@ class MovieDetailViewController: UIViewController {
     func requestComments() {
         
         guard let movieId = SharedInfo.shared.movieId else { return }
-        guard let url = URL(string: networkURL.baseURL + SharedInfo.shared.commentURL + movieId) else { return }
+        guard let url = URL(string: networkURL.baseURL + networkURL.commentURL + movieId) else { return }
         
         let session = URLSession(configuration: .default)
         let dataTask = session.dataTask(with: url) { (data, response, error) in
@@ -293,6 +293,7 @@ extension MovieDetailViewController: UITableViewDataSource, UITableViewDelegate 
             cell.idLabel.text = comments[indexPath.row].writer
             cell.dateLabel.text = commentDate
             cell.commentLabel.text = comments[indexPath.row].contents
+            cell.point = comments[indexPath.row].rating
             
             return cell
             

@@ -8,6 +8,8 @@
 
 import UIKit
 
+let cellId = "cell"
+
 class DetailTableViewCell: UITableViewCell {
     
     // MARK: - Properties
@@ -41,12 +43,12 @@ class DetailTableViewCell: UITableViewCell {
     
     let pointLabel = UILabel()
     let point = UILabel()
-    let stars = UIImage()
     
     let audienceLabel = UILabel()
     let audience = UILabel()
     
     let background = UIView()
+    let flowLayout = UICollectionViewFlowLayout()
     
     
     // MARK: - init
@@ -63,6 +65,17 @@ class DetailTableViewCell: UITableViewCell {
     }
     
     func configureUI() {
+        
+        let collectionView = UICollectionView(frame: .zero,
+        collectionViewLayout: flowLayout)
+        
+        collectionView.register(StarCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        flowLayout.scrollDirection = .horizontal
+        collectionView.isScrollEnabled = false
+        
+        collectionView.backgroundColor = .clear
         
         stackView = UIStackView(arrangedSubviews: [leftView, middleView, rightView])
         stackView.insertSubview(background, at: 0)
@@ -81,7 +94,7 @@ class DetailTableViewCell: UITableViewCell {
         leftView.addSubview(gradeAndBookingRate)
         middleView.addSubview(pointLabel)
         middleView.addSubview(point)
-        //        middleView.addSubview(stars)
+        middleView.addSubview(collectionView)
         rightView.addSubview(audienceLabel)
         rightView.addSubview(audience)
         
@@ -101,6 +114,7 @@ class DetailTableViewCell: UITableViewCell {
         point.translatesAutoresizingMaskIntoConstraints = false
         audienceLabel.translatesAutoresizingMaskIntoConstraints = false
         audience.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         
         //layout
@@ -150,6 +164,13 @@ class DetailTableViewCell: UITableViewCell {
             point.topAnchor.constraint(equalTo: pointLabel.bottomAnchor, constant: 10),
             point.centerXAnchor.constraint(equalTo: middleView.centerXAnchor),
             
+            
+            collectionView.centerXAnchor.constraint(equalTo: middleView.centerXAnchor),
+            collectionView.topAnchor.constraint(equalTo: point.bottomAnchor, constant: 4),
+            collectionView.heightAnchor.constraint(equalToConstant: 30),
+            collectionView.widthAnchor.constraint(equalToConstant: 104),
+            
+            
             audienceLabel.topAnchor.constraint(equalTo: rightView.topAnchor, constant: 20),
             audienceLabel.centerXAnchor.constraint(equalTo: rightView.centerXAnchor),
             
@@ -178,4 +199,53 @@ class DetailTableViewCell: UITableViewCell {
         
         audienceLabel.font = .systemFont(ofSize: 18, weight: .medium)
     }
+}
+
+
+extension DetailTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! StarCollectionViewCell
+        
+        let stringNum = SharedInfo.shared.point!
+        let num = Int(stringNum)
+        
+        let halfNum: Double = Double(num) / 2
+        
+        if num % 2 == 0 {
+
+            if indexPath.row < Int(halfNum) {
+                cell.starImage.image = UIImage(named: "ic_star_full")
+            } else {
+                cell.starImage.image = UIImage(named: "ic_star_empty")
+            }
+
+        } else {
+            if indexPath.row < Int(halfNum) {
+                cell.starImage.image = UIImage(named: "ic_star_full")
+            } else if indexPath.row == Int(halfNum) {
+                cell.starImage.image = UIImage(named: "ic_star_half")
+            } else {
+                cell.starImage.image = UIImage(named: "ic_star_empty")
+            }
+        }
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width: 20, height: 20)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
 }

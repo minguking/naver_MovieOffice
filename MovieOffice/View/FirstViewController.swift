@@ -52,7 +52,7 @@ class FirstViewController: UIViewController {
         tableView.dataSource = self
         
         configureUI()
-        requestMovie(first: SharedInfo.shared.type, second: "\(networkURL.type)")
+        requestMovie(first: networkURL.type, second: "\(networkURL.type)")
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNoti(_:)),
                                                name: DidReceiveNotification,
@@ -159,7 +159,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate {
         SharedInfo.shared.movieThumbnail = movieModel[indexPath.row].thumb
         SharedInfo.shared.movieTitle = movieModel[indexPath.row].title
         SharedInfo.shared.ageImage = movieModel[indexPath.row].grade
-        
+        SharedInfo.shared.point = movieModel[indexPath.row].userRating
     }
     
     

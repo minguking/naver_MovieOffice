@@ -62,13 +62,13 @@ class MovieDetailViewController: UIViewController {
         requestComments()
         activityIndicator.startAnimating()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureUI()
         requestMovieInfo()
-//        activityIndicator.stopAnimating()
+        //        activityIndicator.stopAnimating()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -102,7 +102,7 @@ class MovieDetailViewController: UIViewController {
     
     
     // MARK: - Helper
-
+    
     func configureUI() {
         
         navigationItem.title = SharedInfo.shared.movieTitle
@@ -250,26 +250,26 @@ extension MovieDetailViewController: UITableViewDataSource, UITableViewDelegate 
             
             let audience = numberFormatter.string(from: NSNumber(value: movieInfo.audience))
             
-                DispatchQueue.global().async {
-                    guard let image = SharedInfo.shared.movieThumbnail else { return }
-                    guard let imageURL = URL(string: image) else { return }
-                    guard let imageData = try? Data(contentsOf: imageURL) else { return }
+            DispatchQueue.global().async {
+                guard let image = SharedInfo.shared.movieThumbnail else { return }
+                guard let imageURL = URL(string: image) else { return }
+                guard let imageData = try? Data(contentsOf: imageURL) else { return }
+                
+                DispatchQueue.main.async {
                     
-                    DispatchQueue.main.async {
-                        
-                        cell.movieImage.image = UIImage(data: imageData)
-                        cell.titleLabel.text = self.movieInfo.title
-                        cell.ageImage.image = UIImage(named: "ic_\(self.movieInfo.grade)")
-                        cell.releaseDate.text = "\(self.movieInfo.date)개봉"
-                        cell.genreAndDuration.text = "\(self.movieInfo.genre)/\(self.movieInfo.duration)분"
-                        cell.bookingRateLabel.text = "예매율"
-                        cell.gradeAndBookingRate.text = "\(self.movieInfo.reservationGrade)위 \(self.movieInfo.reservationRate)%"
-                        cell.pointLabel.text = "평점"
-                        cell.point.text = "\(self.movieInfo.userRating)"
-                        cell.audienceLabel.text = "누적관객수"
-                        cell.audience.text = audience
-                    }
+                    cell.movieImage.image = UIImage(data: imageData)
+                    cell.titleLabel.text = self.movieInfo.title
+                    cell.ageImage.image = UIImage(named: "ic_\(self.movieInfo.grade)")
+                    cell.releaseDate.text = "\(self.movieInfo.date)개봉"
+                    cell.genreAndDuration.text = "\(self.movieInfo.genre)/\(self.movieInfo.duration)분"
+                    cell.bookingRateLabel.text = "예매율"
+                    cell.gradeAndBookingRate.text = "\(self.movieInfo.reservationGrade)위 \(self.movieInfo.reservationRate)%"
+                    cell.pointLabel.text = "평점"
+                    cell.point.text = "\(self.movieInfo.userRating)"
+                    cell.audienceLabel.text = "누적관객수"
+                    cell.audience.text = audience
                 }
+            }
             return cell
             
         case 1:
@@ -293,7 +293,7 @@ extension MovieDetailViewController: UITableViewDataSource, UITableViewDelegate 
         case 2:
             
             let cell = tableView.dequeueReusableCell(withIdentifier: staffCellId, for: indexPath) as! StaffTableViewCell
-
+            
             cell.directorAndActor.text = "감독/출연"
             cell.directorLabel.text = "감독"
             cell.actorLabel.text = "배우"
@@ -306,23 +306,58 @@ extension MovieDetailViewController: UITableViewDataSource, UITableViewDelegate 
             
             let cell = tableView.dequeueReusableCell(withIdentifier: commentCellId, for: indexPath) as! CommentTableViewCell
             
-//            if let index = tableView.indexPath(for: cell) {
-//                if index.row == indexPath.row {
-                    
-                    let date = NSDate(timeIntervalSince1970: comments[indexPath.row].timestamp)
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    let commentDate = dateFormatter.string(from: date as Date)
-                    
-                    cell.idLabel.text = comments[indexPath.row].writer
-                    cell.dateLabel.text = commentDate
-                    cell.commentLabel.text = comments[indexPath.row].contents
-                    cell.point = comments[indexPath.row].rating
-                    
-                    return cell
-//                }
-//            }
-//            return cell
+            let date = NSDate(timeIntervalSince1970: comments[indexPath.row].timestamp)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let commentDate = dateFormatter.string(from: date as Date)
+            
+            cell.idLabel.text = comments[indexPath.row].writer
+            cell.dateLabel.text = commentDate
+            cell.commentLabel.text = comments[indexPath.row].contents
+            cell.point = comments[indexPath.row].rating
+            
+            let stars = [cell.starImage1, cell.starImage2, cell.starImage3, cell.starImage4, cell.starImage5]
+            
+            let num = Int(comments[indexPath.row].rating)
+            
+                    let halfNum: Double = Double(num) / 2
+            
+                    if num % 2 == 0 {
+                        
+                        if num == 10 {
+                            for i in 0...4 {
+                                stars[i].image = UIImage(named: "ic_star_full")
+                            }
+                        } else {
+                            
+                            for i in 0..<num/2 {
+                                stars[i].image = UIImage(named: "ic_star_full")
+                            }
+                            for j in num/2...4 {
+                                stars[j].image = UIImage(named: "ic_star_empty")
+                            }
+                        }
+                        
+                    } else {
+                        
+                        if num == 9 {
+                            for i in 0..<num/2 {
+                                stars[i].image = UIImage(named: "ic_star_full")
+                            }
+                            stars[Int(num/2)].image = UIImage(named: "ic_star_half")
+                        } else {
+                            
+                            for i in 0..<num/2 {
+                                stars[i].image = UIImage(named: "ic_star_full")
+                            }
+                            stars[Int(num/2)].image = UIImage(named: "ic_star_half")
+                            for j in Int(num/2)+1...4 {
+                                stars[j].image = UIImage(named: "ic_star_empty")
+                            }
+                        }
+            }
+            
+            return cell
             
         default:
             return UITableViewCell()
@@ -333,7 +368,7 @@ extension MovieDetailViewController: UITableViewDataSource, UITableViewDelegate 
     
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-
+        
         return 1000
     }
     

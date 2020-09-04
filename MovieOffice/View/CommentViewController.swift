@@ -74,7 +74,7 @@ class CommentViewController: UIViewController {
         //
         
         let param: [String: Any] = [
-            "rating": 2.0,
+            "rating": 9.0,
             "writer": nickNameTf.text,
             "movie_id": SharedInfo.shared.movieId,
             "contents": contentTv.text

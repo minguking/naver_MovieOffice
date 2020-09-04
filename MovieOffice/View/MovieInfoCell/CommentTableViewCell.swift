@@ -28,6 +28,7 @@ class CommentTableViewCell: UITableViewCell {
     }()
     
     let layout = UICollectionViewFlowLayout()
+    //    var collectionView = UICollectionView()
     
     var point: Double = 0.0
     
@@ -86,10 +87,10 @@ class CommentTableViewCell: UITableViewCell {
             collectionView.leadingAnchor.constraint(equalTo: idLabel.trailingAnchor, constant: 4),
             collectionView.widthAnchor.constraint(equalToConstant: 104),
             collectionView.heightAnchor.constraint(equalToConstant: 30),
-
+            
             dateLabel.topAnchor.constraint(equalTo: idLabel.bottomAnchor, constant: 4),
             dateLabel.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 4),
-
+            
             commentLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 10),
             commentLabel.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 4),
             commentLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30),
@@ -116,20 +117,20 @@ extension CommentTableViewCell: UICollectionViewDataSource, UICollectionViewDele
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: rateCellId, for: indexPath) as! RateCollectionViewCell
         
-//        let stringNum = SharedInfo.shared.point!
         let num = Int(point)
         
         let halfNum: Double = Double(num) / 2
         
         if num % 2 == 0 {
-
+            
             if indexPath.row < Int(halfNum) {
                 cell.starImage.image = UIImage(named: "ic_star_full")
             } else {
                 cell.starImage.image = UIImage(named: "ic_star_empty")
             }
-
+            
         } else {
+            
             if indexPath.row < Int(halfNum) {
                 cell.starImage.image = UIImage(named: "ic_star_full")
             } else if indexPath.row == Int(halfNum) {
@@ -138,8 +139,8 @@ extension CommentTableViewCell: UICollectionViewDataSource, UICollectionViewDele
                 cell.starImage.image = UIImage(named: "ic_star_empty")
             }
         }
-        
         return cell
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

@@ -19,6 +19,8 @@ class MovieDetailViewController: UIViewController {
     
     let tableView = UITableView()
     
+    let activityIndicator = UIActivityIndicatorView()
+    
     let networkURL = NetworkURL()
     var movieInfo = MovieInfoModel()
     var comments = [Comments]()
@@ -52,13 +54,27 @@ class MovieDetailViewController: UIViewController {
     
     
     // MARK: - Lifecycle
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        tableView.reloadData()
+        
+        requestComments()
+        activityIndicator.startAnimating()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureUI()
         requestMovieInfo()
-        requestComments()
+//        activityIndicator.stopAnimating()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        activityIndicator.stopAnimating()
     }
     
     
@@ -94,7 +110,12 @@ class MovieDetailViewController: UIViewController {
         tableView.allowsSelection = false
         tableView.separatorStyle = .none
         
+        activityIndicator.center = view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.style = .large
+        
         view.addSubview(tableView)
+        view.addSubview(activityIndicator)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: detailCellId)
         tableView.register(StaffTableViewCell.self, forCellReuseIdentifier: staffCellId)
@@ -285,19 +306,26 @@ extension MovieDetailViewController: UITableViewDataSource, UITableViewDelegate 
             
             let cell = tableView.dequeueReusableCell(withIdentifier: commentCellId, for: indexPath) as! CommentTableViewCell
             
-            let date = NSDate(timeIntervalSince1970: comments[indexPath.row].timestamp)
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let commentDate = dateFormatter.string(from: date as Date)
+//            if let index = tableView.indexPath(for: cell) {
+//                if index.row == indexPath.row {
+                    
+                    let date = NSDate(timeIntervalSince1970: comments[indexPath.row].timestamp)
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    let commentDate = dateFormatter.string(from: date as Date)
+                    
+                    cell.idLabel.text = comments[indexPath.row].writer
+                    cell.dateLabel.text = commentDate
+                    cell.commentLabel.text = comments[indexPath.row].contents
+                    cell.point = comments[indexPath.row].rating
+                    
+                    return cell
+//                }
+//            }
+//            return cell
             
-            cell.idLabel.text = comments[indexPath.row].writer
-            cell.dateLabel.text = commentDate
-            cell.commentLabel.text = comments[indexPath.row].contents
-            cell.point = comments[indexPath.row].rating
-            
-            return cell
-            
-        default: return UITableViewCell()
+        default:
+            return UITableViewCell()
             
         }
         

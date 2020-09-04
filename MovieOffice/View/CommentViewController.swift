@@ -15,7 +15,7 @@ class CommentViewController: UIViewController {
     let postModel = [PostModel]()
     let networkURL = NetworkURL()
     
-    lazy var leftButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(handleCanel))
+    lazy var leftButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(handleCancel))
     lazy var rightButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(handleDone))
     
     let topView = UIView()
@@ -51,10 +51,17 @@ class CommentViewController: UIViewController {
         
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        let vc = MovieDetailViewController()
+        vc.tableView.reloadData()
+    }
+    
     
     // MARK: - Selector
     
-    @objc func handleCanel() {
+    @objc func handleCancel() {
         dismiss(animated: true, completion: nil)
         let vc = MovieDetailViewController()
         vc.tableView.reloadData()
@@ -63,84 +70,35 @@ class CommentViewController: UIViewController {
     @objc func handleDone() {
         
         guard let url = URL(string: "https://connect-boxoffice.run.goorm.io/comment") else { return }
-        
-        //
-        let param = "rating=4.0&writer=abcd&movie_id=5a54c286e8a71d136fb5378e&contents=abcd"
 
-        let paramData = param.data(using: .utf8)
+        //
+        
+        let param: [String: Any] = [
+            "rating": 2.0,
+            "writer": nickNameTf.text,
+            "movie_id": SharedInfo.shared.movieId,
+            "contents": contentTv.text
+        ]
+
+        let paramData = try! JSONSerialization.data(withJSONObject: param, options: [])
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = paramData
 
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.setValue(String(paramData!.count), forHTTPHeaderField: "Content-Length")
-        //
-        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
         let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let err = error {
                 print("God damn error!!! \(err.localizedDescription)")
                 return
             }
-            guard let data = data else { return }
-            
-            let output = String(data: data, encoding: .utf8)
-            print("result : \(output!)")
-            
         }
         dataTask.resume()
-
-//        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-//
-//            if let err = error {
-//                print(err.localizedDescription)
-//                return
-//            }
-//            DispatchQueue.main.async {
-//                do {
-//                    let realData = try JSONEncoder().encode(data)
-//                } catch(let err) {
-//                    print(err.localizedDescription)
-//                }
-//                let output = String(data: data!, encoding: .utf8)
-//                print("result : \(output!)")
-//            }
-//        }
-//        task.resume()
         
-//        let url = URL(string: "https://connect-boxoffice.run.goorm.io/comment")!
-//        var request = URLRequest(url: url)
-//        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-//        request.httpMethod = "POST"
-//        let parameters: [String: Any] = [
-//            "rating": 4.0,
-//            "writer": "asdfghjk",
-//            "movie_id": "5a54c286e8a71d136fb5378e",
-//            "contents": "Jack"
-//        ]
-//        request.httpBody = parameters.percentEncoded()
-//
-//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//            guard let data = data,
-//                let response = response as? HTTPURLResponse,
-//                error == nil else {
-//                    // check for fundamental networking error
-//                print("error", error ?? "Unknown error")
-//                return
-//            }
-//
-//            guard (200 ... 299) ~= response.statusCode else {
-//                // check for http errors
-//                print("statusCode should be 2xx, but is \(response.statusCode)")
-//                print("response = \(response)")
-//                return
-//            }
-//
-//            let responseString = String(data: data, encoding: .utf8)
-//            print("responseString = \(responseString)")
-//        }
-//
-//        task.resume()
+        SharedInfo.shared.nickName = nickNameTf.text
+        dismiss(animated: true, completion: nil)
+        
     }
     
     
@@ -200,7 +158,6 @@ class CommentViewController: UIViewController {
             starImage.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
             starImage.centerXAnchor.constraint(equalTo: topView.centerXAnchor)
             
-            
         ])
         
         topView.backgroundColor = .white
@@ -247,34 +204,4 @@ extension CommentViewController: UITextViewDelegate {
         }
     }
     
-}
-
-/*
- 한줄평 등록할 때 -> 싱글톤에 닉네임 등록하기.
- 시간도 넘겨주기(?)
- post
- 별 드래그해서 점수 올리기 만들어야함.
- */
-
-extension Dictionary {
-    func percentEncoded() -> Data? {
-        return map { key, value in
-            let escapedKey = "\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
-            let escapedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
-            return escapedKey + "=" + escapedValue
-        }
-        .joined(separator: "&")
-        .data(using: .utf8)
-    }
-}
-
-extension CharacterSet {
-    static let urlQueryValueAllowed: CharacterSet = {
-        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
-        let subDelimitersToEncode = "!$&'()*+,;="
-
-        var allowed = CharacterSet.urlQueryAllowed
-        allowed.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
-        return allowed
-    }()
 }

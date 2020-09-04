@@ -30,4 +30,8 @@ class RateCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        
+    }
+    
 }

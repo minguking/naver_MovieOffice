@@ -32,6 +32,7 @@
 		3D58A7DD24FF72B5003F17E2 /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58A7DC24FF72B5003F17E2 /* PostModel.swift */; };
 		3D58A7DF2500CBE3003F17E2 /* StarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58A7DE2500CBE3003F17E2 /* StarCollectionViewCell.swift */; };
 		3D58A7E12500DD31003F17E2 /* RateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58A7E02500DD31003F17E2 /* RateCollectionViewCell.swift */; };
+		3D58A7E325036D3B003F17E2 /* ShowWarning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58A7E225036D3B003F17E2 /* ShowWarning.swift */; };
 		3DD3FA8A24FE6F4900092441 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3FA8924FE6F4900092441 /* CommentViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +64,7 @@
 		3D58A7DC24FF72B5003F17E2 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		3D58A7DE2500CBE3003F17E2 /* StarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarCollectionViewCell.swift; sourceTree = "<group>"; };
 		3D58A7E02500DD31003F17E2 /* RateCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCollectionViewCell.swift; sourceTree = "<group>"; };
+		3D58A7E225036D3B003F17E2 /* ShowWarning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWarning.swift; sourceTree = "<group>"; };
 		3DD3FA8924FE6F4900092441 /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,6 +121,7 @@
 				3D3FFA9F24FBA5F500E6BE0B /* Request.swift */,
 				3D3FFAA224FC820300E6BE0B /* SharedInfo.swift */,
 				3D3FFAA624FCDA7700E6BE0B /* ShowAlert.swift */,
+				3D58A7E225036D3B003F17E2 /* ShowWarning.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 				3D3FFA9B24FBA3B100E6BE0B /* NetworkURL.swift in Sources */,
 				3D58A7E12500DD31003F17E2 /* RateCollectionViewCell.swift in Sources */,
 				3D3FFAA024FBA5F500E6BE0B /* Request.swift in Sources */,
+				3D58A7E325036D3B003F17E2 /* ShowWarning.swift in Sources */,
 				3D58A7DF2500CBE3003F17E2 /* StarCollectionViewCell.swift in Sources */,
 				3D3FFAA724FCDA7700E6BE0B /* ShowAlert.swift in Sources */,
 				3D3FFA7F24FB979C00E6BE0B /* SceneDelegate.swift in Sources */,

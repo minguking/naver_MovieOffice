@@ -26,7 +26,31 @@ class CommentViewController: UIViewController {
         img.contentMode = .scaleAspectFit
         return img
     }()
-    let starImage: UIImageView = {
+    let starImage1: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "ic_star_large_full")
+        img.contentMode = .scaleAspectFit
+        return img
+    }()
+    let starImage2: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "ic_star_large_full")
+        img.contentMode = .scaleAspectFit
+        return img
+    }()
+    let starImage3: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "ic_star_large_full")
+        img.contentMode = .scaleAspectFit
+        return img
+    }()
+    let starImage4: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "ic_star_large_full")
+        img.contentMode = .scaleAspectFit
+        return img
+    }()
+    let starImage5: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "ic_star_large_full")
         img.contentMode = .scaleAspectFit
@@ -36,6 +60,9 @@ class CommentViewController: UIViewController {
     
     let nickNameTf = UITextField()
     let contentTv = UITextView()
+    
+    let slider = UISlider()
+    let ratingLabel = UILabel()
     
     // MARK: - Lifecycle
     
@@ -69,35 +96,83 @@ class CommentViewController: UIViewController {
     
     @objc func handleDone() {
         
-        guard let url = URL(string: "https://connect-boxoffice.run.goorm.io/comment") else { return }
-
-        //
+        if !nickNameTf.hasText || !contentTv.hasText {
+            guard let nav = navigationController else { return }
+            showWarning(navController: nav)
+        } else {
+            
+            guard let url = URL(string: "https://connect-boxoffice.run.goorm.io/comment") else { return }
+            
+            //
+            
+            let param: [String: Any] = [
+                "rating": Int(ratingLabel.text!),
+                "writer": nickNameTf.text,
+                "movie_id": SharedInfo.shared.movieId,
+                "contents": contentTv.text
+            ]
+            
+            let paramData = try! JSONSerialization.data(withJSONObject: param, options: [])
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = paramData
+            
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let err = error {
+                    print("God damn error!!! \(err.localizedDescription)")
+                    return
+                }
+            }
+            dataTask.resume()
+            
+            SharedInfo.shared.nickName = nickNameTf.text
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    @objc func handleSlider() {
+        ratingLabel.text = "\(Int(slider.value))"
         
-        let param: [String: Any] = [
-            "rating": 9.0,
-            "writer": nickNameTf.text,
-            "movie_id": SharedInfo.shared.movieId,
-            "contents": contentTv.text
-        ]
-
-        let paramData = try! JSONSerialization.data(withJSONObject: param, options: [])
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = paramData
-
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let err = error {
-                print("God damn error!!! \(err.localizedDescription)")
-                return
+        var halfNum = Int(slider.value) / 2
+        
+        let stars = [starImage1, starImage2, starImage3, starImage4, starImage5]
+        
+        if Int(slider.value) % 2 == 0 {
+            
+            if Int(slider.value) == 10 {
+                for i in 0...4 {
+                    stars[i].image = UIImage(named: "ic_star_large_full")
+                }
+            } else {
+                for i in 0..<Int(slider.value)/2 {
+                    stars[i].image = UIImage(named: "ic_star_large_full")
+                }
+                for j in Int(slider.value)/2...4 {
+                    stars[j].image = UIImage(named: "ic_star_large")
+                }
+            }
+            
+        } else {
+            
+            if Int(slider.value) == 9 {
+                for i in 0..<Int(slider.value)/2 {
+                    stars[i].image = UIImage(named: "ic_star_large_full")
+                }
+                stars[4].image = UIImage(named: "ic_star_large_half")
+            } else {
+                
+                for i in 0..<Int(slider.value)/2 {
+                    stars[i].image = UIImage(named: "ic_star_large_full")
+                }
+                stars[Int(slider.value/2)].image = UIImage(named: "ic_star_large_half")
+                for j in Int(Int(slider.value)/2)+1...4 {
+                    stars[j].image = UIImage(named: "ic_star_large")
+                }
             }
         }
-        dataTask.resume()
-        
-        SharedInfo.shared.nickName = nickNameTf.text
-        dismiss(animated: true, completion: nil)
         
     }
     
@@ -106,6 +181,22 @@ class CommentViewController: UIViewController {
     
     func configureUI() {
         
+        slider.maximumValue = 10
+        slider.minimumValue = 1
+        slider.value = 10
+        slider.backgroundColor = .clear
+        slider.tintColor = .clear
+        slider.thumbTintColor = .clear
+        slider.addTarget(self, action: #selector(handleSlider), for: .valueChanged)
+        slider.maximumTrackTintColor = .clear
+        
+        
+        topView.addSubview(slider)
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        
+        topView.addSubview(ratingLabel)
+        ratingLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         navigationController?.navigationBar.barTintColor = .systemTeal
         
         view.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 229/255, alpha: 1)
@@ -113,13 +204,21 @@ class CommentViewController: UIViewController {
         view.addSubview(topView)
         view.addSubview(bottomView)
         topView.addSubview(titleLabel)
-        topView.addSubview(starImage)
+        topView.addSubview(starImage1)
+        topView.addSubview(starImage2)
+        topView.addSubview(starImage3)
+        topView.addSubview(starImage4)
+        topView.addSubview(starImage5)
         view.addSubview(ageImage)
         bottomView.addSubview(nickNameTf)
         bottomView.addSubview(contentTv)
         
         topView.translatesAutoresizingMaskIntoConstraints = false
-        starImage.translatesAutoresizingMaskIntoConstraints = false
+        starImage1.translatesAutoresizingMaskIntoConstraints = false
+        starImage2.translatesAutoresizingMaskIntoConstraints = false
+        starImage3.translatesAutoresizingMaskIntoConstraints = false
+        starImage4.translatesAutoresizingMaskIntoConstraints = false
+        starImage5.translatesAutoresizingMaskIntoConstraints = false
         bottomView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         ageImage.translatesAutoresizingMaskIntoConstraints = false
@@ -155,8 +254,27 @@ class CommentViewController: UIViewController {
             contentTv.bottomAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.bottomAnchor, constant: -12),
             contentTv.trailingAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.trailingAnchor, constant: -12),
             
-            starImage.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
-            starImage.centerXAnchor.constraint(equalTo: topView.centerXAnchor)
+            starImage1.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
+            starImage1.trailingAnchor.constraint(equalTo: starImage2.leadingAnchor, constant: -2),
+            
+            starImage2.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
+            starImage2.trailingAnchor.constraint(equalTo: starImage3.leadingAnchor, constant: -2),
+            
+            starImage3.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
+            starImage3.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
+            
+            starImage4.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
+            starImage4.leadingAnchor.constraint(equalTo: starImage3.trailingAnchor, constant: 2),
+            
+            starImage5.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
+            starImage5.leadingAnchor.constraint(equalTo: starImage4.trailingAnchor, constant: 2),
+            
+            slider.leadingAnchor.constraint(equalTo: starImage1.leadingAnchor),
+            slider.trailingAnchor.constraint(equalTo: starImage5.trailingAnchor),
+            slider.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
+            
+            ratingLabel.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
+            ratingLabel.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 20)
             
         ])
         
@@ -174,6 +292,8 @@ class CommentViewController: UIViewController {
         contentTv.layer.borderWidth = 1
         contentTv.layer.borderColor = UIColor.systemPink.cgColor
         contentTv.font = .systemFont(ofSize: 17)
+        
+        ratingLabel.text = "\(Int(slider.value))"
         
         
     }

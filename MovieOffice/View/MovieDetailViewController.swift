@@ -320,41 +320,38 @@ extension MovieDetailViewController: UITableViewDataSource, UITableViewDelegate 
             
             let num = Int(comments[indexPath.row].rating)
             
-                    let halfNum: Double = Double(num) / 2
-            
-                    if num % 2 == 0 {
-                        
-                        if num == 10 {
-                            for i in 0...4 {
-                                stars[i].image = UIImage(named: "ic_star_full")
-                            }
-                        } else {
-                            
-                            for i in 0..<num/2 {
-                                stars[i].image = UIImage(named: "ic_star_full")
-                            }
-                            for j in num/2...4 {
-                                stars[j].image = UIImage(named: "ic_star_empty")
-                            }
-                        }
-                        
-                    } else {
-                        
-                        if num == 9 {
-                            for i in 0..<num/2 {
-                                stars[i].image = UIImage(named: "ic_star_full")
-                            }
-                            stars[Int(num/2)].image = UIImage(named: "ic_star_half")
-                        } else {
-                            
-                            for i in 0..<num/2 {
-                                stars[i].image = UIImage(named: "ic_star_full")
-                            }
-                            stars[Int(num/2)].image = UIImage(named: "ic_star_half")
-                            for j in Int(num/2)+1...4 {
-                                stars[j].image = UIImage(named: "ic_star_empty")
-                            }
-                        }
+            if num % 2 == 0 {
+                
+                if num == 10 {
+                    for i in 0...4 {
+                        stars[i].image = UIImage(named: "ic_star_full")
+                    }
+                } else {
+                    for i in 0..<num/2 {
+                        stars[i].image = UIImage(named: "ic_star_full")
+                    }
+                    for j in num/2...4 {
+                        stars[j].image = UIImage(named: "ic_star_empty")
+                    }
+                }
+                
+            } else {
+                
+                if num == 9 {
+                    for i in 0..<num/2 {
+                        stars[i].image = UIImage(named: "ic_star_full")
+                    }
+                    stars[4].image = UIImage(named: "ic_star_half")
+                } else {
+                    
+                    for i in 0..<num/2 {
+                        stars[i].image = UIImage(named: "ic_star_full")
+                    }
+                    stars[Int(num/2)].image = UIImage(named: "ic_star_half")
+                    for j in Int(num/2)+1...4 {
+                        stars[j].image = UIImage(named: "ic_star_empty")
+                    }
+                }
             }
             
             return cell
